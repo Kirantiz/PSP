@@ -1,0 +1,2 @@
+F:\Git\Kiranti_PSP\ClientT\Debug\ClientT.exe
+F:\Git\Kiranti_PSP\ClientT\Debug\ClientT.pdb
