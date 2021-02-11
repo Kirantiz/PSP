@@ -1,0 +1,2 @@
+F:\Git\PSP\ServerT\Debug\ServerT.exe
+F:\Git\PSP\ServerT\Debug\ServerT.pdb
