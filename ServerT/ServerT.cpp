@@ -43,6 +43,27 @@ int main()
                 throw  SetErrorMsgText("socket:", WSAGetLastError());
    
             
+            SOCKADDR_IN serv;                     // параметры  сокета sS
+            serv.sin_family = AF_INET;           // используется IP-адресация  
+            serv.sin_port = htons(2000);          // порт 2000
+            serv.sin_addr.s_addr = INADDR_ANY;   // любой собственный IP-адрес 
+
+            if (bind(sS, (LPSOCKADDR)&serv, sizeof(serv)) == SOCKET_ERROR) // Установка параметров сокета, с помощью функции bind
+                throw  SetErrorMsgText("bind:", WSAGetLastError());
+
+            if (listen(sS, SOMAXCONN) == SOCKET_ERROR) //Переключение сокета в режим прослушивания
+                throw  SetErrorMsgText("listen:", WSAGetLastError());
+
+            SOCKET cS;	                 // сокет для обмена данными с клиентом 
+            SOCKADDR_IN clnt;             // параметры  сокета клиента
+            memset(&clnt, 0, sizeof(clnt)); // обнулить память
+            int lclnt = sizeof(clnt);    // размер SOCKADDR_IN
+
+            if ((cS = accept(sS, (sockaddr*)&clnt, &lclnt)) == INVALID_SOCKET) // создание канала связи
+                throw  SetErrorMsgText("accept:", WSAGetLastError());
+
+
+
             //.............................................................
    
      

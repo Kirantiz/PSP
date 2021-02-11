@@ -1,2 +1,4 @@
 F:\Git\PSP\ServerT\Debug\ServerT.exe
 F:\Git\PSP\ServerT\Debug\ServerT.pdb
+F:\Git\Kiranti_PSP\ServerT\Debug\ServerT.exe
+F:\Git\Kiranti_PSP\ServerT\Debug\ServerT.pdb
