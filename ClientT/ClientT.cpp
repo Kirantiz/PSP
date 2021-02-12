@@ -1,8 +1,11 @@
 ﻿#include <iostream>
 #include "string"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
 #include "Winsock2.h"  // заголовок WS2_32.dll
 #pragma comment (lib, "WS2_32.lib") // экспорт WS2_32.dll
+#pragma warning(disable : 4996)
 
 
 using namespace std;
@@ -59,7 +62,13 @@ int main()
             throw  SetErrorMsgText("connect:", WSAGetLastError());
 
 
+        char obuf[50] = "Hello from Client";  //буфер вывода
+        int  lobuf = 0;                    //количество отправленных байь 
 
+        _itoa(lobuf, obuf + sizeof("Hello from Client") - 1, 10);
+
+        if ((lobuf = send(cC, obuf, strlen(obuf) + 1, NULL)) == SOCKET_ERROR)
+            throw  SetErrorMsgText("send:", WSAGetLastError());
 
 
         //.............................................................

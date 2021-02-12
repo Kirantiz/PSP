@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include "string"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "Winsock2.h"  // заголовок WS2_32.dll
 #pragma comment (lib, "WS2_32.lib") // экспорт WS2_32.dll
 
@@ -62,7 +63,16 @@ int main()
             if ((cS = accept(sS, (sockaddr*)&clnt, &lclnt)) == INVALID_SOCKET) // создание канала связи
                 throw  SetErrorMsgText("accept:", WSAGetLastError());
 
+            cout << "IP adress clint: " << inet_ntoa(clnt.sin_addr) << endl;
+            cout << "Port client: " << htons(clnt.sin_port) << endl;
 
+
+            char ibuf[50];                   //буфер ввода 
+            int  libuf = 0;                    //количество принятых байт
+
+            if ((libuf = recv(cS, ibuf, sizeof(ibuf), NULL)) == SOCKET_ERROR)
+                throw  SetErrorMsgText("recv:", WSAGetLastError());
+            
 
             //.............................................................
    

@@ -1,7 +1,12 @@
 ﻿#include <iostream>
 #include "string"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
 #include "Winsock2.h"  // заголовок WS2_32.dll
 #pragma comment (lib, "WS2_32.lib") // экспорт WS2_32.dll
+#pragma warning(disable : 4996)
+
 
 using namespace std;
 
@@ -12,6 +17,13 @@ string  GetErrorMsgText(int code)    // формируется текст оши
     {
     case WSAEINTR:          msgText = "WSAEINTR";         break;
     case WSAEACCES:         msgText = "WSAEACCES";        break;
+    case WSAHOST_NOT_FOUND: msgText = "WSAHOST_NOT_FOUND";break;
+    case WSATRY_AGAIN:      msgText = "WSATRY_AGAIN";     break;
+    case WSAEADDRNOTAVAIL:  msgText = "WSAEADDRNOTAVAIL"; break;
+    case WSAENOTCONN:       msgText = "WSAENOTCONN";      break;
+    case WSAEHOSTUNREACH:   msgText = "WSAEHOSTUNREACH";  break;
+    case WSAEHOSTDOWN:      msgText = "WSAEHOSTDOWN";     break;
+    case WSAECONNREFUSED:   msgText = "WSAECONNREFUSED";  break;
         //..........коды WSAGetLastError ..........................
     case WSASYSCALLFAILURE: msgText = "WSASYSCALLFAILURE"; break;
     default:                msgText = "***ERROR***";      break;
@@ -29,7 +41,7 @@ string  SetErrorMsgText(string msgText, int code)
 int main()
 {
     WSADATA wsaData;
-    SOCKET sS; // дескриптор сокета
+    SOCKET cC; // дескриптор сокета
 
 
         //...........................................................
@@ -39,17 +51,30 @@ int main()
 
         if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)  //Инициализация  библиотеки Windows Sockets
             throw  SetErrorMsgText("Startup:", WSAGetLastError());
-        if ((sS = socket(AF_INET, SOCK_STREAM, NULL)) == INVALID_SOCKET) // Создание сокета
+        if ((cC = socket(AF_INET, SOCK_STREAM, NULL)) == INVALID_SOCKET) // Создание сокета
             throw  SetErrorMsgText("socket:", WSAGetLastError());
+        
+        SOCKADDR_IN serv;                    // параметры  сокета сервера
+        serv.sin_family = AF_INET;           // используется IP-адресация  
+        serv.sin_port = htons(2000);                   // TCP-порт 2000
+        serv.sin_addr.s_addr = inet_addr("127.0.0.1");  // адрес сервера
+        if ((connect(cC, (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
+            throw  SetErrorMsgText("connect:", WSAGetLastError());
 
 
+        char obuf[50] = "Hello from Client";  //буфер вывода
+        int  lobuf = 0;                    //количество отправленных байь 
 
+        _itoa(lobuf, obuf + sizeof("Hello from Client") - 1, 10);
+
+        if ((lobuf = send(cC, obuf, strlen(obuf) + 1, NULL)) == SOCKET_ERROR)
+            throw  SetErrorMsgText("send:", WSAGetLastError());
 
 
         //.............................................................
 
 
-        if (closesocket(sS) == SOCKET_ERROR)                            //Закрытие сокета
+        if (closesocket(cC) == SOCKET_ERROR)                            //Закрытие сокета
             throw  SetErrorMsgText("closesocket:", WSAGetLastError());
 
 
