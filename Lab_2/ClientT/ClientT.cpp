@@ -6,6 +6,7 @@
 #include "Winsock2.h"  // заголовок WS2_32.dll
 #pragma comment (lib, "WS2_32.lib") // экспорт WS2_32.dll
 #pragma warning(disable : 4996)
+#include <cstdlib>
 
 
 using namespace std;
@@ -42,50 +43,74 @@ int main()
 {
     WSADATA wsaData;
     SOCKET cC; // дескриптор сокета
+    int maxlen = 512; //размер буфера
+    char* result_string = new char[maxlen];
+    int msg;
 
 
         //...........................................................
     try
     {
+        cout << "Enter the number of messages" << endl;
+        cin >> msg;
+        cout << endl;
+
+        for (int i = 1; i <= msg; i++) {
+            if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)  //Инициализация  библиотеки Windows Sockets
+                throw  SetErrorMsgText("Startup:", WSAGetLastError());
+            if ((cC = socket(AF_INET, SOCK_STREAM, NULL)) == INVALID_SOCKET) // Создание сокета
+                throw  SetErrorMsgText("socket:", WSAGetLastError());
+
+            SOCKADDR_IN serv;                    // параметры  сокета сервера
+            serv.sin_family = AF_INET;           // используется IP-адресация  
+            serv.sin_port = htons(2000);                   // TCP-порт 2000
+            serv.sin_addr.s_addr = inet_addr("127.0.0.1");  // адрес сервера
 
 
-        if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)  //Инициализация  библиотеки Windows Sockets
-            throw  SetErrorMsgText("Startup:", WSAGetLastError());
-        if ((cC = socket(AF_INET, SOCK_STREAM, NULL)) == INVALID_SOCKET) // Создание сокета
-            throw  SetErrorMsgText("socket:", WSAGetLastError());
-        
-        SOCKADDR_IN serv;                    // параметры  сокета сервера
-        serv.sin_family = AF_INET;           // используется IP-адресация  
-        serv.sin_port = htons(2000);                   // TCP-порт 2000
-        serv.sin_addr.s_addr = inet_addr("127.0.0.1");  // адрес сервера
-        if ((connect(cC, (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
-            throw  SetErrorMsgText("connect:", WSAGetLastError());
+            if ((connect(cC, (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
+                throw  SetErrorMsgText("connect:", WSAGetLastError());
 
 
-        char obuf[50] = "Hello from Client";  //буфер вывода
-        int  lobuf = 0;                    //количество отправленных байь 
+            char obuf[50] = "Hello from Client_";  //буфер вывода
+            char ibuf[512];                     // буфер приёма
+            int  lobuf = 0;                    //количество отправленных байт 
+            int libuf = 0;                     //количество принятых байт
+            
+            _itoa(lobuf+i, obuf + 18, 10);
 
-        _itoa(lobuf, obuf + sizeof("Hello from Client") - 1, 10);
+            if ((lobuf = send(cC, obuf, strlen(obuf) + 1, NULL)) == SOCKET_ERROR)
+                throw  SetErrorMsgText("send:", WSAGetLastError());
+            cout << "Send: " << obuf << endl;
+            
+            
+            if ((libuf = recv(cC, ibuf, sizeof(ibuf), 0)) == SOCKET_ERROR)
+                throw  SetErrorMsgText("recv:", WSAGetLastError());
+            _itoa(i+1, ibuf + 18, 10);
+            cout << ibuf << endl;
 
-        if ((lobuf = send(cC, obuf, strlen(obuf) + 1, NULL)) == SOCKET_ERROR)
-            throw  SetErrorMsgText("send:", WSAGetLastError());
+            // for (int i = 1; i <= 1000; i++) 
+             //{
 
 
+
+      //  }
         //.............................................................
 
 
-        if (closesocket(cC) == SOCKET_ERROR)                            //Закрытие сокета
-            throw  SetErrorMsgText("closesocket:", WSAGetLastError());
+            if (closesocket(cC) == SOCKET_ERROR)                            //Закрытие сокета
+                throw  SetErrorMsgText("closesocket:", WSAGetLastError());
 
 
-        if (WSACleanup() == SOCKET_ERROR) //Завершение работы с библиотекой  Windows Sockets
-            throw  SetErrorMsgText("Cleanup:", WSAGetLastError());
+            if (WSACleanup() == SOCKET_ERROR) //Завершение работы с библиотекой  Windows Sockets
+                throw  SetErrorMsgText("Cleanup:", WSAGetLastError());
+        }
     }
     catch (string errorMsgText)
     {
         cout << endl << errorMsgText;
     }
 
+    system("pause");
     //................................................................
     return 0;
 }

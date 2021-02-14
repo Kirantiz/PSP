@@ -31,7 +31,9 @@ int main()
 {
     WSADATA wsaData;
     SOCKET sS; // дескриптор сокета
-
+    bool mem = false;
+    int maxlen = 512; //размер буфера
+    char* result_string = new char[maxlen];
 
         //...........................................................
         try
@@ -54,30 +56,53 @@ int main()
 
             if (listen(sS, SOMAXCONN) == SOCKET_ERROR) //Переключение сокета в режим прослушивания
                 throw  SetErrorMsgText("listen:", WSAGetLastError());
-
+            while (true) {
             SOCKET cS;	                 // сокет для обмена данными с клиентом 
             SOCKADDR_IN clnt;             // параметры  сокета клиента
             memset(&clnt, 0, sizeof(clnt)); // обнулить память
             int lclnt = sizeof(clnt);    // размер SOCKADDR_IN
-
-            if ((cS = accept(sS, (sockaddr*)&clnt, &lclnt)) == INVALID_SOCKET) // создание канала связи
-                throw  SetErrorMsgText("accept:", WSAGetLastError());
-
-            cout << "IP adress clint: " << inet_ntoa(clnt.sin_addr) << endl;
-            cout << "Port client: " << htons(clnt.sin_port) << endl;
-
-
-            char ibuf[50];                   //буфер ввода 
-            int  libuf = 0;                    //количество принятых байт
-
-            if ((libuf = recv(cS, ibuf, sizeof(ibuf), NULL)) == SOCKET_ERROR)
-                throw  SetErrorMsgText("recv:", WSAGetLastError());
             
+                if ((cS = accept(sS, (sockaddr*)&clnt, &lclnt)) == INVALID_SOCKET) // создание канала связи
+                    throw  SetErrorMsgText("accept:", WSAGetLastError());
 
+                if (mem == false) {
+                    cout << "IP adress client: " << inet_ntoa(clnt.sin_addr) << endl;
+                    cout << "Port client: " << htons(clnt.sin_port) << endl;
+                    mem = true;
+                }
+
+                char ibuf[1000];                   //буфер ввода 
+                int  libuf = 0;                    //количество принятых байт
+
+                if ((libuf = recv(cS, ibuf, maxlen, 0)) == SOCKET_ERROR)
+                    throw  SetErrorMsgText("recv:", WSAGetLastError());
+
+                cout << ibuf << endl;
+
+                //_snprintf_s(result_string, maxlen, maxlen, ibuf);
+
+                send(cS, ibuf, strlen(ibuf), 0);
+                cout << "Send answer:_" << ibuf << endl;      
+
+   /*                            if ((libuf = recv(cS, ibuf, sizeof(ibuf), NULL)) == SOCKET_ERROR)
+                    throw  SetErrorMsgText("recv:", WSAGetLastError());
+
+
+                //char obuf[50] = "Hello from Client_";  //буфер вывода
+                int  lobuf = 0;                    //количество отправленных байт 
+
+                //_itoa(lobuf, ibuf + sizeof("Hello from Client_") - 1, 10);
+
+                if ((lobuf = send(sS, ibuf, strlen(ibuf) + 1, NULL)) == SOCKET_ERROR)
+                    throw  SetErrorMsgText("send:", WSAGetLastError());  
+
+*/
+
+
+            }
             //.............................................................
-   
-     
-            if (closesocket(sS) == SOCKET_ERROR)                            //Закрытие сокета
+            
+                if (closesocket(sS) == SOCKET_ERROR)                            //Закрытие сокета
                 throw  SetErrorMsgText("closesocket:", WSAGetLastError());
 
 
