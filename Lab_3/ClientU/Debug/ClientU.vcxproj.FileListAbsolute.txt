@@ -1,0 +1,2 @@
+F:\Git\Kiranti_PSP\Lab_3\ClientU\Debug\ClientU.exe
+F:\Git\Kiranti_PSP\Lab_3\ClientU\Debug\ClientU.pdb
