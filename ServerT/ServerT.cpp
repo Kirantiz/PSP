@@ -32,6 +32,8 @@ int main()
     WSADATA wsaData;
     SOCKET sS; // дескриптор сокета
     bool mem = false;
+    int maxlen = 512; //размер буфера
+    char* result_string = new char[maxlen];
 
         //...........................................................
         try
@@ -72,13 +74,18 @@ int main()
                 char ibuf[1000];                   //буфер ввода 
                 int  libuf = 0;                    //количество принятых байт
 
-                if ((libuf = recv(cS, ibuf, sizeof(ibuf), NULL)) == SOCKET_ERROR)
+                if ((libuf = recv(cS, ibuf, maxlen, 0)) == SOCKET_ERROR)
                     throw  SetErrorMsgText("recv:", WSAGetLastError());
 
                 cout << ibuf << endl;
 
-   /*             if ((connect(sS, (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
-                    throw  SetErrorMsgText("connect:", WSAGetLastError());
+                //_snprintf_s(result_string, maxlen, maxlen, ibuf);
+
+                send(cS, ibuf, strlen(ibuf), 0);
+                cout << "Send answer:_" << ibuf << endl;      
+
+   /*                            if ((libuf = recv(cS, ibuf, sizeof(ibuf), NULL)) == SOCKET_ERROR)
+                    throw  SetErrorMsgText("recv:", WSAGetLastError());
 
 
                 //char obuf[50] = "Hello from Client_";  //буфер вывода
