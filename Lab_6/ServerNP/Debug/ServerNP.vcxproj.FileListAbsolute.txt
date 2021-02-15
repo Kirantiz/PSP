@@ -1,0 +1,2 @@
+F:\Git\Kiranti_PSP\Lab_6\ServerNP\Debug\ServerNP.exe
+F:\Git\Kiranti_PSP\Lab_6\ServerNP\Debug\ServerNP.pdb
