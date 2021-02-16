@@ -1,0 +1,4 @@
+﻿  ClientMS2.cpp
+F:\Git\Kiranti_PSP\Lab_7\ClientMS2\ClientMS2.cpp(13,17): warning C4101: errMsg: неиспользованная локальная переменная
+F:\Git\Kiranti_PSP\Lab_7\ClientMS2\ClientMS2.cpp(12,25): warning C4101: sc2: неиспользованная локальная переменная
+  ClientMS2.vcxproj -> F:\Git\Kiranti_PSP\Lab_7\ClientMS2\Debug\ClientMS2.exe

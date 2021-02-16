@@ -1,0 +1,3 @@
+﻿  ClientMS.cpp
+F:\Git\Kiranti_PSP\Lab_7\ClientMS\ClientMS.cpp(14,8): warning C4101: rb: неиспользованная локальная переменная
+  ClientMS.vcxproj -> F:\Git\Kiranti_PSP\Lab_7\ClientMS\Debug\ClientMS.exe

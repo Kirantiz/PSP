@@ -1,0 +1,4 @@
+﻿  ServerMS2.cpp
+F:\Git\Kiranti_PSP\Lab_7\ServerMS2\ServerMS2.cpp(15,17): warning C4101: errMsg: неиспользованная локальная переменная
+F:\Git\Kiranti_PSP\Lab_7\ServerMS2\ServerMS2.cpp(14,25): warning C4101: sc2r: неиспользованная локальная переменная
+  ServerMS2.vcxproj -> F:\Git\Kiranti_PSP\Lab_7\ServerMS2\Debug\ServerMS2.exe

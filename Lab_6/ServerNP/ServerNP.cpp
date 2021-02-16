@@ -34,24 +34,45 @@ int main()
 {
 
     HANDLE hPipe; // дескриптор канала
-
+    char buf[128];
+    DWORD lBuf;
     try 
     {
+        while (true) {
         if ((hPipe = CreateNamedPipe(L"\\\\.\\pipe\\Tube",
             PIPE_ACCESS_DUPLEX,           //дуплексный канал 
             PIPE_TYPE_MESSAGE | PIPE_WAIT,  // сообщения|синхронный
             1, NULL, NULL,                 // максимум 1 экземпляр
             INFINITE, NULL)) == INVALID_HANDLE_VALUE)
             throw SetPipeError("create:", GetLastError());
-        cout << "Server wainting Client" << endl;
+        cout << "Server waiting Client" << endl;
+     
         if (!ConnectNamedPipe(hPipe, NULL))           // ожидать клиента   
             throw SetPipeError("connect:", GetLastError());
- 
+        else
+        {
+            cout << "Connected" << endl;
+        }
+        while (true)
+        {
+        ConnectNamedPipe(hPipe, NULL);
+        ReadFile(hPipe, buf, sizeof(buf), &lBuf, NULL);
+      
+        if (strcmp(buf, "stop") == 0)
+            break;
+        cout << buf << endl;
+        WriteFile(hPipe, buf, sizeof(buf), &lBuf, NULL);
+
+
         //.................................................................. 
 
+
+        if (buf[0] == 'C')
+            DisconnectNamedPipe(hPipe);
+        }
         DisconnectNamedPipe(hPipe);
         CloseHandle(hPipe);
-
+        }
     }
     catch(string ErrorPipeText)
     {

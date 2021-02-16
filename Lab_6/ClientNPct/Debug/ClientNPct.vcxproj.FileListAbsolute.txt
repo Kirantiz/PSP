@@ -1,0 +1,2 @@
+F:\Git\Kiranti_PSP\Lab_6\ClientNPct\Debug\ClientNPct.exe
+F:\Git\Kiranti_PSP\Lab_6\ClientNPct\Debug\ClientNPct.pdb

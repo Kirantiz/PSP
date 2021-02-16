@@ -1,0 +1,3 @@
+﻿  ServerMS.cpp
+F:\Git\Kiranti_PSP\Lab_7\ServerMS\ServerMS.cpp(33,15): warning C4101: lBuf: неиспользованная локальная переменная
+  ServerMS.vcxproj -> F:\Git\Kiranti_PSP\Lab_7\ServerMS\Debug\ServerMS.exe

@@ -1,0 +1,2 @@
+F:\Git\Kiranti_PSP\Lab_7\ServerMS2\Debug\ServerMS2.exe
+F:\Git\Kiranti_PSP\Lab_7\ServerMS2\Debug\ServerMS2.pdb

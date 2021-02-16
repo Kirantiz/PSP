@@ -1,0 +1,3 @@
+﻿  ClientNPct.cpp
+F:\Git\Kiranti_PSP\Lab_6\ClientNPct\ClientNPct.cpp(40,12): warning C4101: hNamedPipe: неиспользованная локальная переменная
+  ClientNPct.vcxproj -> F:\Git\Kiranti_PSP\Lab_6\ClientNPct\Debug\ClientNPct.exe

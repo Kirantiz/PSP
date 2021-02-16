@@ -1,6 +1,7 @@
 ﻿
 #include <iostream>
 #include <Windows.h>
+#include <string>
 
 using namespace std;
 
@@ -35,12 +36,35 @@ int main()
 {
 
     HANDLE hPipe; // дескриптор канала
-
+    int msg;
+    char buf[128];
+    string str;
+    DWORD lBuf, bWrite = 128;
     try
     {
      
-        if ((hPipe = CreateFile(TEXT("\\\\.\\pipe\\Tube"), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE)
+     /*   if ((hPipe = CreateFile(TEXT("\\\\.\\pipe\\Tube"), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE)
             throw  SetPipeError("createfile:", GetLastError());
+            */
+        if ((hPipe = CreateFile(TEXT("\\\\Kiranti_PC01\\pipe\\Tube"), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE)
+            throw  SetPipeError("createfile:", GetLastError());
+        //\\servname\pipe\xxxxx
+        cout << "Enter number of message: " << endl;
+        cin >> msg;
+
+        for (int i = 0; i < msg; i++) 
+        {
+            str = "Hello from Client" +to_string(i + 1);
+            WriteFile(hPipe, str.c_str(), sizeof(str), &lBuf, NULL);
+
+            ReadFile(hPipe, buf, sizeof(buf), &lBuf, NULL);
+            cout << "Otvet ot serv:_";
+            cout << buf << endl;
+
+        }
+
+        WriteFile(hPipe, "stop", sizeof("stop"), &lBuf, NULL);
+        CloseHandle(hPipe);
         //.................................................................. 
 
 
@@ -49,7 +73,7 @@ int main()
     {
         cout << endl << ErrorPipeText;
     }
-
+    system("pause");
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
